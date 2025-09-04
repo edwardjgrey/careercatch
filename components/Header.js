@@ -1,29 +1,16 @@
-// components/Header.js - Header with simple translation system
+// components/Header.js - Fixed for Next.js 14
 import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
-import LanguageSwitcher from './LanguageSwitcher'
-import { useTranslations } from '../lib/translations'  // FIXED: Import from your translations file
 
 export default function Header() {
-  const t = useTranslations()  // Now this will work!
   const { data: session, status } = useSession()
   const router = useRouter()
   const [showDropdown, setShowDropdown] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
-  const [, forceUpdate] = useState({})
   const dropdownRef = useRef(null)
   const buttonRef = useRef(null)
-
-  useEffect(() => {
-    // Listen for language changes
-    const handleLangChange = () => {
-      forceUpdate({}) // Force re-render when language changes
-    }
-    window.addEventListener('languageChange', handleLangChange)
-    return () => window.removeEventListener('languageChange', handleLangChange)
-  }, [])
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -44,47 +31,31 @@ export default function Header() {
     await signOut({ callbackUrl: '/' })
   }
 
-  const handleNavigation = (path) => {
-    setShowDropdown(false)
-    setShowMobileMenu(false)
-    router.push(path)
-  }
-
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/">
-            <div className="flex items-center cursor-pointer">
-              <span className="text-2xl font-bold text-blue-600">Career</span>
-              <span className="text-2xl font-bold text-gray-800">Catch</span>
-            </div>
+          <Link href="/" className="flex items-center cursor-pointer">
+            <span className="text-2xl font-bold text-blue-600">Career</span>
+            <span className="text-2xl font-bold text-gray-800">Catch</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/jobs">
-              <span className="text-gray-700 hover:text-blue-600 cursor-pointer font-medium">
-                {t('nav.findJobs')}
-              </span>
+            <Link href="/jobs" className="text-gray-700 hover:text-blue-600 font-medium">
+              Find Jobs
             </Link>
             
             {session?.user?.role === 'employer' && (
-              <Link href="/jobs/post">
-                <span className="text-gray-700 hover:text-blue-600 cursor-pointer font-medium">
-                  {t('nav.postJob')}
-                </span>
+              <Link href="/jobs/post" className="text-gray-700 hover:text-blue-600 font-medium">
+                Post Job
               </Link>
             )}
 
-            <Link href="/companies">
-              <span className="text-gray-700 hover:text-blue-600 cursor-pointer font-medium">
-                {t('nav.companies')}
-              </span>
+            <Link href="/companies" className="text-gray-700 hover:text-blue-600 font-medium">
+              Companies
             </Link>
-
-            <LanguageSwitcher />
 
             {status === 'loading' ? (
               <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse"></div>
@@ -122,60 +93,74 @@ export default function Header() {
                     </div>
                     
                     <div className="py-1">
-                      <button
-                        onClick={() => handleNavigation('/dashboard')}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      <Link 
+                        href="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setShowDropdown(false)}
                       >
-                        {t('nav.dashboard')}
-                      </button>
+                        Dashboard
+                      </Link>
                       
-                      <button
-                        onClick={() => handleNavigation('/profile')}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      <Link 
+                        href="/profile"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setShowDropdown(false)}
                       >
-                        {t('nav.profile')}
-                      </button>
+                        My Profile
+                      </Link>
                       
                       {session.user.role === 'job_seeker' && (
                         <>
-                          <button
-                            onClick={() => handleNavigation('/dashboard/applications')}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          <Link 
+                            href="/dashboard/applications"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowDropdown(false)}
                           >
-                            {t('nav.applications')}
-                          </button>
-                          <button
-                            onClick={() => handleNavigation('/dashboard/saved-jobs')}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            My Applications
+                          </Link>
+                          <Link 
+                            href="/dashboard/saved-jobs"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowDropdown(false)}
                           >
-                            {t('nav.savedJobs')}
-                          </button>
+                            Saved Jobs
+                          </Link>
                         </>
                       )}
                       
                       {session.user.role === 'employer' && (
                         <>
-                          <button
-                            onClick={() => handleNavigation('/dashboard/posted-jobs')}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          <Link 
+                            href="/dashboard/posted-jobs"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowDropdown(false)}
                           >
-                            {t('nav.postedJobs')}
-                          </button>
-                          <button
-                            onClick={() => handleNavigation('/dashboard/applications')}
-                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            Posted Jobs
+                          </Link>
+                          <Link 
+                            href="/dashboard/applications"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowDropdown(false)}
                           >
-                            {t('nav.applications')}
-                          </button>
+                            View Applications
+                          </Link>
+                          <Link 
+                            href="/companies"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowDropdown(false)}
+                          >
+                            Company Profile
+                          </Link>
                         </>
                       )}
                       
-                      <button
-                        onClick={() => handleNavigation('/settings')}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      <Link 
+                        href="/settings"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setShowDropdown(false)}
                       >
-                        {t('nav.settings')}
-                      </button>
+                        Settings
+                      </Link>
                     </div>
                     
                     <div className="border-t py-1">
@@ -183,7 +168,7 @@ export default function Header() {
                         onClick={handleSignOut}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        {t('nav.signOut')}
+                        Sign Out
                       </button>
                     </div>
                   </div>
@@ -191,14 +176,12 @@ export default function Header() {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link href="/auth/login">
-                  <span className="text-gray-700 hover:text-blue-600 cursor-pointer font-medium">
-                    {t('nav.signIn')}
-                  </span>
+                <Link href="/auth/login" className="text-gray-700 hover:text-blue-600 font-medium">
+                  Sign In
                 </Link>
                 <Link href="/auth/register">
                   <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium">
-                    {t('nav.signUp')}
+                    Sign Up
                   </button>
                 </Link>
               </div>
@@ -206,8 +189,7 @@ export default function Header() {
           </nav>
 
           {/* Mobile menu button */}
-          <div className="flex items-center space-x-2 md:hidden">
-            <LanguageSwitcher />
+          <div className="md:hidden">
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none"
@@ -227,28 +209,31 @@ export default function Header() {
         {showMobileMenu && (
           <div className="md:hidden border-t">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              <button
-                onClick={() => handleNavigation('/jobs')}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              <Link 
+                href="/jobs"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                onClick={() => setShowMobileMenu(false)}
               >
-                {t('nav.findJobs')}
-              </button>
+                Find Jobs
+              </Link>
               
               {session?.user?.role === 'employer' && (
-                <button
-                  onClick={() => handleNavigation('/jobs/post')}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                <Link 
+                  href="/jobs/post"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  onClick={() => setShowMobileMenu(false)}
                 >
-                  {t('nav.postJob')}
-                </button>
+                  Post Job
+                </Link>
               )}
               
-              <button
-                onClick={() => handleNavigation('/companies')}
-                className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+              <Link 
+                href="/companies"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                onClick={() => setShowMobileMenu(false)}
               >
-                {t('nav.companies')}
-              </button>
+                Companies
+              </Link>
 
               {session ? (
                 <>
@@ -260,35 +245,38 @@ export default function Header() {
                       <p className="text-sm text-gray-500">{session.user.email}</p>
                     </div>
                     
-                    <button
-                      onClick={() => handleNavigation('/dashboard')}
-                      className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                    <Link 
+                      href="/dashboard"
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                      onClick={() => setShowMobileMenu(false)}
                     >
-                      {t('nav.dashboard')}
-                    </button>
+                      Dashboard
+                    </Link>
                     
                     <button
                       onClick={handleSignOut}
                       className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
-                      {t('nav.signOut')}
+                      Sign Out
                     </button>
                   </div>
                 </>
               ) : (
                 <div className="border-t pt-2 mt-2 space-y-1">
-                  <button
-                    onClick={() => handleNavigation('/auth/login')}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  <Link 
+                    href="/auth/login"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                    onClick={() => setShowMobileMenu(false)}
                   >
-                    {t('nav.signIn')}
-                  </button>
-                  <button
-                    onClick={() => handleNavigation('/auth/register')}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700"
+                    Sign In
+                  </Link>
+                  <Link 
+                    href="/auth/register"
+                    className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700"
+                    onClick={() => setShowMobileMenu(false)}
                   >
-                    {t('nav.signUp')}
-                  </button>
+                    Sign Up
+                  </Link>
                 </div>
               )}
             </div>

@@ -230,12 +230,18 @@ export default function JobDetail() {
                   <div className="text-gray-600">per {job.job_type === 'contract' ? 'contract' : 'year'}</div>
                 </div>
 
-                <button
-                  onClick={() => setShowApplicationModal(true)}
-                  className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition mb-3"
-                >
+              <button onClick={() => setShowApplicationModal(true)} className="...">
                   Apply Now
                 </button>
+
+                {/* Add Message Button */}
+                {session?.user?.role === 'job_seeker' && (
+                  <MessageButton 
+                    recipientId={job.posted_by}
+                    recipientName={job.company_name}
+                    jobTitle={job.title}
+                  />
+                )}
 
                 <button
                   onClick={handleSaveJob}
