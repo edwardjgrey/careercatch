@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "home": "Home",
+    "findJobs": "Find Jobs",
+    "companies": "Companies",
+    "salaries": "Salaries",
+    "careerAdvice": "Career Advice",
+    "postJob": "Post a Job",
+    "forEmployers": "For Employers",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "applications": "Applications",
+    "savedJobs": "Saved Jobs",
+    "settings": "Settings",
+    "signOut": "Sign Out",
+    "postedJobs": "Posted Jobs"
+  },
+  "hero": {
+    "title": "Find Your Dream Job in Central Asia",
+    "subtitle": "Connect with top employers in Kyrgyzstan, Kazakhstan, Uzbekistan, and Tajikistan",
+    "searchPlaceholder": "Job title, keywords, or company",
+    "locationPlaceholder": "All Locations",
+    "searchButton": "Search Jobs"
+  },
+  "stats": {
+    "activeJobs": "Active Jobs",
+    "companies": "Companies",
+    "jobSeekers": "Job Seekers"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "career-catch",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.637.0",
+    "@tailwindcss/forms": "0.5.7",
+    "bcryptjs": "2.4.3",
+    "date-fns": "3.6.0",
+    "dotenv": "^17.2.2",
+    "i18next": "^25.4.2",
+    "multer": "1.4.5-lts.1",
+    "next": "^14.2.32",
+    "next-auth": "^4.24.7",
+    "next-i18next": "^15.4.2",
+    "nodemailer": "6.9.14",
+    "pg": "8.12.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-hook-form": "7.52.2",
+    "react-i18next": "^15.7.3",
+    "sharp": "0.33.4"
+  },
+  "devDependencies": {
+    "autoprefixer": "10.4.20",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.5",
+    "postcss": "8.4.41",
+    "tailwindcss": "3.4.10"
+  }
+}
